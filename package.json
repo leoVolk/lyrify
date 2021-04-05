@@ -51,8 +51,10 @@
     }
   },
   "dependencies": {
+    "@popperjs/core": "^2.9.2",
+    "axios": "^0.21.1",
+    "bootstrap": "^5.0.0-beta3",
     "vue": "^2.5.16",
-    "axios": "^0.18.0",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",

@@ -7,9 +7,7 @@
 <script>
   export default {
     name: 'lyrify'
-  }
+  };
 </script>
 
-<style>
-  /* CSS */
-</style>
+<style></style>
