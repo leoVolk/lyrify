@@ -1,37 +1,49 @@
 <template>
-  <div class="container-fluid position-relative">
-    <div
-      v-if="!currentSong || !refreshToken"
-      class="row justify-content-center py-3"
-    >
-      <div class="col-auto text-center">
-        <a :href="authUrl" class="btn rounded-pill btn-success">
-          Login With Spotify
-        </a>
-      </div>
-    </div>
-    <div v-else>
+  <div class="container-fluid">
+    <div class="row">
       <div
-        class="row justify-content-center position-sticky song-title shadow-lg"
-        v-if="currentSong"
+        v-if="refreshToken.length === 0 || !currentSong"
+        class="row justify-content-center py-3"
       >
-        <div class="col-12 text-center py-3 border-bottom ">
-          <h4>
-            <span v-for="artist in currentSong.item.artists" :key="artist.id">
-              {{ artist.name }}</span
-            >
-          </h4>
-          <h1>{{ currentSong.item.name }}</h1>
-          <span>{{ currentSong.item.album.name }}</span>
+        <div class="col-auto text-center">
+          <a
+            :href="authUrl"
+            target="_blank"
+            class="btn rounded-pill btn-success"
+          >
+            Login With Spotify
+          </a>
         </div>
       </div>
-      <div class="row my-lg-2 justify-content-center ">
+      <div class="shadow-lg position-sticky song-title">
+        <div class="row justify-content-center">
+          <div class="col-12 text-center py-3 border-bottom ">
+            <h4>
+              <span v-for="artist in currentSong.item.artists" :key="artist.id">
+                {{ artist.name }}</span
+              >
+            </h4>
+            <h1>{{ currentSong.item.name }}</h1>
+            <span>{{ currentSong.item.album.name }}</span>
+          </div>
+          <div class="album-background">
+            <img
+              id="album-cover"
+              class="img-cover"
+              :src="currentSong.item.album.images[0].url"
+            />
+          </div>
+        </div>
+      </div>
+      <div v-if="currentSong" class="row my-lg-2 justify-content-center ">
         <div class="col-8 text-center">
           <p v-if="lyrics.length > 0" style="white-space: pre-line">
             {{ lyrics }}
           </p>
           <p v-else>
-            Sorry, we could not find any lyrics for this song
+            Sorry, we could not find any lyrics for "{{
+              currentSong.item.name
+            }}" by {{ currentSong.item.artists[0].name }}
           </p>
         </div>
       </div>
@@ -70,8 +82,6 @@
       async refreshAccessToken() {
         await spotifyApi.refreshAccessToken().then(
           data => {
-            console.log('The access token has been refreshed!');
-
             // Save the access token so that it's used in future calls
             spotifyApi.setAccessToken(data.body['access_token']);
           },
@@ -123,6 +133,7 @@
           );
         });
         setInterval(() => {
+          if (!this.refreshToken) return;
           this.refreshAccessToken().then(() => {
             spotifyApi.getMyCurrentPlayingTrack().then(
               data => {
@@ -142,7 +153,6 @@
         }, 1000);
       },
       getLyrics() {
-        console.log('getting lyrics');
         axios
           .get(
             'https://api.lyrics.ovh/v1/' +
@@ -168,7 +178,7 @@
         authUrl: '',
         refreshToken: '',
 
-        currentSong: {}
+        currentSong: null
       };
     },
     mounted() {
@@ -183,13 +193,54 @@
     background-color: rgb(22, 22, 22);
     color: rgb(196, 196, 196);
     font-family: 'Roboto Mono', sans-serif;
-    -webkit-app-region: drag;
+    -webkit-app-region: drag !important;
+  }
+
+  .img-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 
   .song-title {
     background-color: rgb(22, 22, 22);
     color: rgb(196, 196, 196);
 
+    overflow: hidden;
     top: 0px;
+
+    .album-background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      filter: blur(5px);
+    }
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #1db954;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2aff75;
+  }
+
+  .border-bottom {
+    border-color: #1db954 !important;
+    border-width: 2px !important;
   }
 </style>

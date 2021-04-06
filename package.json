@@ -54,6 +54,7 @@
     "@popperjs/core": "^2.9.2",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta3",
+    "colorthief": "^2.3.2",
     "dotenv": "^8.2.0",
     "spotify-web-api-node": "^5.0.2",
     "vue": "^2.5.16",
