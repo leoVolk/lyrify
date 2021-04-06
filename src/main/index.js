@@ -1,4 +1,5 @@
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
+require('dotenv').config();
 
 /**
  * Set `__static` path to static files in production
@@ -23,12 +24,14 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    width: 1000
-    //frame: false
+    width: 1000,
+    //frame: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   mainWindow.loadURL(winURL);
-
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -67,3 +70,16 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
+
+ipcMain.on('showModal', function(e, data) {
+  let win = new BrowserWindow({
+    width: 400,
+    height: 320,
+    webPreferences: { webSecurity: false }
+  });
+  win.on('close', function() {
+    win = null;
+  });
+  win.loadURL(authorizeURL);
+  win.show();
+});

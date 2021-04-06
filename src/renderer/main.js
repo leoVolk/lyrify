@@ -6,6 +6,8 @@ import axios from 'axios';
 import router from './router';
 import store from './store';
 
+require('dotenv').config();
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
