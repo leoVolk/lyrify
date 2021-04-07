@@ -17,14 +17,21 @@
       </div>
       <div class="shadow-lg position-sticky song-title">
         <div class="row justify-content-center">
-          <div class="col-12 text-center py-3 border-bottom ">
-            <h4>
-              <span v-for="artist in currentSong.item.artists" :key="artist.id">
-                {{ artist.name }}</span
-              >
-            </h4>
-            <h1>{{ currentSong.item.name }}</h1>
-            <span>{{ currentSong.item.album.name }}</span>
+          <div class="col-12 text-center py-3 border-bottom">
+            <div class="row justify-content-center ">
+              <div class="col-auto ">
+                <h4>
+                  <span
+                    v-for="artist in currentSong.item.artists"
+                    :key="artist.id"
+                  >
+                    {{ artist.name }}</span
+                  >
+                </h4>
+                <h1>{{ currentSong.item.name }}</h1>
+                <span>{{ currentSong.item.album.name }}</span>
+              </div>
+            </div>
           </div>
           <div class="album-background">
             <img
@@ -191,7 +198,7 @@
   @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
   body {
     background-color: rgb(22, 22, 22);
-    color: rgb(196, 196, 196);
+    color: rgb(240, 240, 240);
     font-family: 'Roboto Mono', sans-serif;
     -webkit-app-region: drag !important;
   }
@@ -205,7 +212,7 @@
 
   .song-title {
     background-color: rgb(22, 22, 22);
-    color: rgb(196, 196, 196);
+    color: rgb(240, 240, 240);
 
     overflow: hidden;
     top: 0px;
@@ -216,6 +223,17 @@
       height: 100%;
       z-index: -1;
       filter: blur(5px);
+
+      &:after {
+        position: absolute;
+        content: '';
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.5;
+      }
     }
   }
 
