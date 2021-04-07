@@ -68,3 +68,15 @@ body {
 .action-menu-item {
   text-decoration: none;
 }
+
+.infoBtn {
+  position: sticky;
+  bottom: 32px;
+  left: 32px;
+
+  button {
+    background: #1db954;
+    color: rgb(240, 240, 240);
+    font-weight: bolder !important;
+  }
+}

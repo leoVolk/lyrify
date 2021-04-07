@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid h-100 position-relative">
     <div class="row">
       <div
         v-if="refreshToken.length === 0"
@@ -48,6 +48,13 @@
               currentSong.item.name
             }}" by {{ currentSong.item.artists[0].name }}
           </p>
+        </div>
+      </div>
+    </div>
+    <div class="infoBtn h-100 w-100">
+      <div class="row justify-content-end">
+        <div class="col-auto ">
+          <button class="btn rounded-circle shadow">?</button>
         </div>
       </div>
     </div>
