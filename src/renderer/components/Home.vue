@@ -12,63 +12,27 @@
         </div>
       </div>
       <div v-else-if="currentSong" class="shadow-lg position-sticky song-title">
-        <div class="row justify-content-center">
-          <div class="col-12 text-center py-3 border-bottom">
-            <div class="row justify-content-center ">
-              <div class="col-auto ">
-                <h4>
-                  <span
-                    v-for="artist in currentSong.item.artists"
-                    :key="artist.id"
-                  >
-                    {{ artist.name }}</span
-                  >
-                </h4>
-                <h1>{{ currentSong.item.name }}</h1>
-                <span>{{ currentSong.item.album.name }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="album-background">
-            <img
-              id="album-cover"
-              class="img-cover"
-              :src="currentSong.item.album.images[0].url"
-            />
-          </div>
-        </div>
+        <song-bar :currentSong="currentSong"></song-bar>
       </div>
       <div v-if="currentSong" class="row my-2 justify-content-center ">
-        <div class="col-8 text-center">
-          <p v-if="lyrics.length > 0" style="white-space: pre-line">
-            {{ lyrics }}
-          </p>
-          <p v-else>
-            Sorry, we could not find any lyrics for "{{
-              currentSong.item.name
-            }}" by {{ currentSong.item.artists[0].name }}
-          </p>
-        </div>
+        <lyrics :currentSong="currentSong" :lyrics="lyrics"></lyrics>
       </div>
     </div>
-    <div class="infoBtn h-100 w-100">
-      <div class="row justify-content-end">
-        <div class="col-auto ">
-          <button class="btn rounded-circle shadow">?</button>
-        </div>
-      </div>
-    </div>
+    <info-button></info-button>
   </div>
 </template>
 
 <script>
   import axios from 'axios';
+  import Lyrics from './Home/Lyrics.vue';
+  import SongBar from './Home/SongBar.vue';
+  import InfoButton from './Home/InfoButton.vue';
   require('dotenv').config();
   var SpotifyWebApi = require('spotify-web-api-node');
   var spotifyApi;
   export default {
     name: 'landing-page',
-    components: {},
+    components: { Lyrics, SongBar, InfoButton },
     methods: {
       createAuthURL() {
         var scopes = [

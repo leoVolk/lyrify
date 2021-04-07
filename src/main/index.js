@@ -72,16 +72,3 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
-
-ipcMain.on('showModal', function(e, data) {
-  let win = new BrowserWindow({
-    width: 400,
-    height: 320,
-    webPreferences: { webSecurity: false }
-  });
-  win.on('close', function() {
-    win = null;
-  });
-  win.loadURL(authorizeURL);
-  win.show();
-});
