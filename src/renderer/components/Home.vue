@@ -57,7 +57,7 @@
 <script>
   import axios from 'axios';
   require('dotenv').config();
-  import { Titlebar, Color } from 'custom-electron-titlebar';
+  const customTitlebar = require('custom-electron-titlebar');
   var SpotifyWebApi = require('spotify-web-api-node');
   var spotifyApi;
   export default {
@@ -187,8 +187,8 @@
     mounted() {
       this.init();
 
-      new Titlebar({
-        backgroundColor: Color.fromHex('#161616')
+      new customTitlebar.Titlebar({
+        backgroundColor: customTitlebar.Color.fromHex('#161616')
       });
     }
   };
