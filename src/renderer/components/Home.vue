@@ -64,7 +64,6 @@
 <script>
   import axios from 'axios';
   require('dotenv').config();
-  const customTitlebar = require('custom-electron-titlebar');
   var SpotifyWebApi = require('spotify-web-api-node');
   var spotifyApi;
   export default {
@@ -105,7 +104,10 @@
         this.createAuthURL();
         const params = new URLSearchParams(window.location.search);
 
-        if (params.get('code') && !localStorage.getItem('refreshToken')) {
+        if (
+          params.get('code') &&
+          !window.localStorage.getItem('refreshToken')
+        ) {
           this.isLoading = true;
           spotifyApi.authorizationCodeGrant(params.get('code')).then(
             data => {
@@ -113,8 +115,11 @@
               // Set the access token on the API object to use it in later calls
               spotifyApi.setAccessToken(data.body['access_token']);
               spotifyApi.setRefreshToken(data.body['refresh_token']);
-              localStorage.setItem('refreshToken', data.body['refresh_token']);
-              this.refreshToken = localStorage.getItem('refreshToken');
+              window.localStorage.setItem(
+                'refreshToken',
+                data.body['refresh_token']
+              );
+              this.refreshToken = window.localStorage.getItem('refreshToken');
               window.history.replaceState(null, null, window.location.pathname);
               this.getCurrentPlayingSong();
             },
@@ -122,8 +127,8 @@
               console.log('Something went wrong!', err);
             }
           );
-        } else if (localStorage.getItem('refreshToken')) {
-          this.refreshToken = localStorage.getItem('refreshToken');
+        } else if (window.localStorage.getItem('refreshToken')) {
+          this.refreshToken = window.localStorage.getItem('refreshToken');
           await spotifyApi.setRefreshToken(this.refreshToken);
           await this.refreshAccessToken();
           this.getCurrentPlayingSong();
@@ -193,10 +198,6 @@
     },
     mounted() {
       this.init();
-
-      new customTitlebar.Titlebar({
-        backgroundColor: customTitlebar.Color.fromHex('#161616')
-      });
     }
   };
 </script>

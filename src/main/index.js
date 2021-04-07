@@ -27,7 +27,6 @@ function createWindow() {
     useContentSize: true,
     width: 1000,
     titleBarStyle: 'hidden',
-    frame: Boolean(process.platform === 'darwin'),
     webPreferences: {
       nodeIntegration: true
     }
