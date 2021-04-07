@@ -2,20 +2,16 @@
   <div class="container-fluid">
     <div class="row">
       <div
-        v-if="refreshToken.length === 0 || !currentSong"
+        v-if="refreshToken.length === 0"
         class="row justify-content-center py-3"
       >
         <div class="col-auto text-center">
-          <a
-            :href="authUrl"
-            target="_blank"
-            class="btn rounded-pill btn-success"
-          >
+          <a :href="authUrl" class="btn rounded-pill btn-success">
             Login With Spotify
           </a>
         </div>
       </div>
-      <div class="shadow-lg position-sticky song-title">
+      <div v-else-if="currentSong" class="shadow-lg position-sticky song-title">
         <div class="row justify-content-center">
           <div class="col-12 text-center py-3 border-bottom">
             <div class="row justify-content-center ">
@@ -42,7 +38,7 @@
           </div>
         </div>
       </div>
-      <div v-if="currentSong" class="row my-lg-2 justify-content-center ">
+      <div v-if="currentSong" class="row my-2 justify-content-center ">
         <div class="col-8 text-center">
           <p v-if="lyrics.length > 0" style="white-space: pre-line">
             {{ lyrics }}
@@ -61,6 +57,7 @@
 <script>
   import axios from 'axios';
   require('dotenv').config();
+  import { Titlebar, Color } from 'custom-electron-titlebar';
   var SpotifyWebApi = require('spotify-web-api-node');
   var spotifyApi;
   export default {
@@ -184,81 +181,16 @@
         lyrics: '',
         authUrl: '',
         refreshToken: '',
-
         currentSong: null
       };
     },
     mounted() {
       this.init();
+
+      new Titlebar({
+        backgroundColor: Color.fromHex('#161616')
+      });
     }
   };
 </script>
-
-<style lang="scss">
-  @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
-  body {
-    background-color: rgb(22, 22, 22);
-    color: rgb(240, 240, 240);
-    font-family: 'Roboto Mono', sans-serif;
-    -webkit-app-region: drag !important;
-  }
-
-  .img-cover {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  .song-title {
-    background-color: rgb(22, 22, 22);
-    color: rgb(240, 240, 240);
-
-    overflow: hidden;
-    top: 0px;
-
-    .album-background {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      filter: blur(5px);
-
-      &:after {
-        position: absolute;
-        content: '';
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: black;
-        opacity: 0.5;
-      }
-    }
-  }
-
-  /* width */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #1db954;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #2aff75;
-  }
-
-  .border-bottom {
-    border-color: #1db954 !important;
-    border-width: 2px !important;
-  }
-</style>
+<style lang="scss" src="../assets/style.scss"></style>

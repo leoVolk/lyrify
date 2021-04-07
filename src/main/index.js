@@ -1,4 +1,5 @@
 import { BrowserWindow, app, ipcMain } from 'electron';
+
 require('dotenv').config();
 
 /**
@@ -25,7 +26,7 @@ function createWindow() {
     height: 563,
     useContentSize: true,
     width: 1000,
-    //frame: false,
+    frame: false,
     webPreferences: {
       nodeIntegration: true
     }
@@ -35,6 +36,8 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  mainWindow.setMenu(null);
 }
 
 app.on('ready', createWindow);
