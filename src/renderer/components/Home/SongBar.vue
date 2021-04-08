@@ -1,6 +1,8 @@
 <template>
-  <div class="row h-25 position-relative justify-content-center song-title">
-    <div class="col-12  text-center py-3 border-bottom ">
+  <div
+    class="row h-25 position-relative border-bottom  justify-content-center song-title"
+  >
+    <div class="col-12  text-center py-3 ">
       <div class="row justify-content-center ">
         <div class="col-auto ">
           <h4>
