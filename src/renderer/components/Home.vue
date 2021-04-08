@@ -32,14 +32,31 @@
 </template>
 
 <script>
+  require('dotenv').config();
+
   import axios from 'axios';
   import Lyrics from './Home/Lyrics.vue';
   import SongBar from './Home/SongBar.vue';
   import InfoButton from './Home/InfoButton.vue';
   import SideBar from './Home/SideBar.vue';
-  require('dotenv').config();
   var SpotifyWebApi = require('spotify-web-api-node');
-  var spotifyApi;
+
+  var scopes = [
+      'user-read-private',
+      'user-read-email',
+      'user-read-currently-playing'
+    ],
+    redirectUri = 'http://localhost:9080',
+    clientId = process.env.SPOTIFY_CLIENT_URL,
+    clientSecret = process.env.SPOTIFY_CLIENT_SECRET,
+    state = 'kgyg9bu4';
+
+  var spotifyApi = new SpotifyWebApi({
+    redirectUri: redirectUri,
+    clientId: clientId,
+    clientSecret: clientSecret
+  });
+
   export default {
     name: 'landing-page',
     components: { Lyrics, SongBar, InfoButton, SideBar },
@@ -62,22 +79,6 @@
     },
     methods: {
       createAuthURL() {
-        var scopes = [
-            'user-read-private',
-            'user-read-email',
-            'user-read-currently-playing'
-          ],
-          redirectUri = 'http://localhost:9080',
-          clientId = process.env.SPOTIFY_CLIENT_URL,
-          clientSecret = process.env.SPOTIFY_CLIENT_SECRET,
-          state = 'kgyg9bu4';
-
-        spotifyApi = new SpotifyWebApi({
-          redirectUri: redirectUri,
-          clientId: clientId,
-          clientSecret: clientSecret
-        });
-
         this.authUrl = spotifyApi.createAuthorizeURL(scopes, state);
       },
       async refreshAccessToken() {
