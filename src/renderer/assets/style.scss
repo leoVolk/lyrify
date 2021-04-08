@@ -4,7 +4,8 @@ body {
   color: rgb(240, 240, 240);
   font-family: 'Roboto Mono', sans-serif;
   -webkit-app-region: drag !important;
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .img-cover {
@@ -15,9 +16,7 @@ body {
 }
 
 .song-title {
-  background-color: rgb(22, 22, 22);
   color: rgb(240, 240, 240);
-
   overflow: hidden;
   top: 0px;
 
@@ -80,4 +79,26 @@ body {
     color: rgb(240, 240, 240);
     font-weight: bolder !important;
   }
+}
+
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.box .row {
+  border: 1px dotted grey;
+}
+
+.box .row.header {
+  flex: 0 1 auto;
+}
+
+.box .row.content {
+  flex: 1 1 auto;
+}
+
+.box .row.footer {
+  flex: 0 1 40px;
 }

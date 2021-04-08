@@ -1,23 +1,35 @@
 <template>
-  <div class="container-fluid h-100 position-relative">
-    <div class="row">
-      <div
-        v-if="refreshToken.length === 0"
-        class="row justify-content-center py-3"
-      >
-        <div class="col-auto text-center">
-          <a :href="authUrl" class="btn rounded-pill btn-success">
-            Login With Spotify
-          </a>
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div class="col-2"></div>
+      <div class="col-10 h-100">
+        <div
+          v-if="refreshToken.length === 0"
+          class="row justify-content-center py-3"
+        >
+          <div class="col-auto text-center">
+            <a :href="authUrl" class="btn rounded-pill btn-success">
+              Login With Spotify
+            </a>
+          </div>
+        </div>
+        <div v-if="currentSong" class="row h-100">
+          <div class="col-12 h-100">
+            <song-bar :currentSong="currentSong"></song-bar>
+            <div class="row h-75 align-self-start overflow-auto">
+              <div class="col-12">
+                <lyrics :lyrics="lyrics" :currentSong="currentSong"></lyrics>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="!currentSong && refreshToken.length > 0" class="col-12">
+            Seems like you are not playing any song. :(
+          </div>
         </div>
       </div>
-      <div v-else-if="currentSong" class="shadow-lg position-sticky song-title">
-        <song-bar :currentSong="currentSong"></song-bar>
-      </div>
-      <div v-if="currentSong" class="row my-2 justify-content-center ">
-        <lyrics :currentSong="currentSong" :lyrics="lyrics"></lyrics>
-      </div>
     </div>
+
     <info-button></info-button>
   </div>
 </template>
@@ -98,7 +110,6 @@
           this.getCurrentPlayingSong();
         }
       },
-      getSomethingFromSpotifyApi() {},
       getCurrentPlayingSong() {
         this.refreshAccessToken().then(() => {
           spotifyApi.getMyCurrentPlayingTrack().then(
