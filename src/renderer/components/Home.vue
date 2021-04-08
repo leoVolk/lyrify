@@ -1,19 +1,16 @@
 <template>
   <div class="container-fluid h-100">
     <div class="row h-100">
-      <div class="col-2"></div>
-      <div class="col-10 h-100">
-        <div
-          v-if="refreshToken.length === 0"
-          class="row justify-content-center py-3"
-        >
-          <div class="col-auto text-center">
-            <a :href="authUrl" class="btn rounded-pill btn-success">
-              Login With Spotify
-            </a>
-          </div>
-        </div>
-        <div v-if="currentSong" class="row h-100">
+      <div class="col-2 sidebar d-none d-sm-flex border-end">
+        <side-bar
+          v-on:logout="logOut"
+          :me="user"
+          :refreshToken="refreshToken"
+          :authUrl="authUrl"
+        ></side-bar>
+      </div>
+      <div class="col-sm-10 col-12 h-100">
+        <div v-show="currentSong" v-if="currentSong" class="row h-100">
           <div class="col-12 h-100">
             <song-bar :currentSong="currentSong"></song-bar>
             <div class="row h-75 align-self-start overflow-auto">
@@ -39,12 +36,30 @@
   import Lyrics from './Home/Lyrics.vue';
   import SongBar from './Home/SongBar.vue';
   import InfoButton from './Home/InfoButton.vue';
+  import SideBar from './Home/SideBar.vue';
   require('dotenv').config();
   var SpotifyWebApi = require('spotify-web-api-node');
   var spotifyApi;
   export default {
     name: 'landing-page',
-    components: { Lyrics, SongBar, InfoButton },
+    components: { Lyrics, SongBar, InfoButton, SideBar },
+    data() {
+      return {
+        isLoading: false,
+        title: '',
+        lyrics: '',
+        authUrl: '',
+        refreshToken: '',
+        currentSong: null,
+        user: null
+      };
+    },
+    created() {
+      this.createAuthURL();
+    },
+    mounted() {
+      this.init();
+    },
     methods: {
       createAuthURL() {
         var scopes = [
@@ -77,17 +92,14 @@
         );
       },
       async init() {
-        this.createAuthURL();
         const params = new URLSearchParams(window.location.search);
-
+        //this is bullshit, optimize
         if (
           params.get('code') &&
           !window.localStorage.getItem('refreshToken')
         ) {
-          this.isLoading = true;
           spotifyApi.authorizationCodeGrant(params.get('code')).then(
             data => {
-              this.isLoading = false;
               // Set the access token on the API object to use it in later calls
               spotifyApi.setAccessToken(data.body['access_token']);
               spotifyApi.setRefreshToken(data.body['refresh_token']);
@@ -95,12 +107,12 @@
                 'refreshToken',
                 data.body['refresh_token']
               );
-              this.refreshToken = window.localStorage.getItem('refreshToken');
-              window.history.replaceState(null, null, window.location.pathname);
+              this.refreshToken = data.body['refresh_token'];
               this.getCurrentPlayingSong();
+              this.getMe();
             },
             function(err) {
-              console.log('Something went wrong!', err);
+              console.error('Something went wrong!', err);
             }
           );
         } else if (window.localStorage.getItem('refreshToken')) {
@@ -108,6 +120,7 @@
           await spotifyApi.setRefreshToken(this.refreshToken);
           await this.refreshAccessToken();
           this.getCurrentPlayingSong();
+          this.getMe();
         }
       },
       getCurrentPlayingSong() {
@@ -159,20 +172,28 @@
             console.error(err);
             this.lyrics = '';
           });
+      },
+      getMe() {
+        this.refreshAccessToken().then(() => {
+          spotifyApi.getMe().then(
+            data => {
+              this.user = data.body;
+            },
+            function(err) {
+              console.log('Something went wrong!', err);
+            }
+          );
+        });
+      },
+      logOut() {
+        this.refreshToken = '';
+        this.user = null;
+        this.currentSong = null;
+        this.lyrics = '';
+        this.title = '';
+
+        window.localStorage.clear();
       }
-    },
-    data() {
-      return {
-        isLoading: false,
-        title: '',
-        lyrics: '',
-        authUrl: '',
-        refreshToken: '',
-        currentSong: null
-      };
-    },
-    mounted() {
-      this.init();
     }
   };
 </script>

@@ -1,6 +1,6 @@
 <template>
-  <div class="row justify-content-center content user-select-all">
-    <div class="col-8 text-center">
+  <div class="row justify-content-center content">
+    <div class="col-8 text-center py-3">
       <p v-if="lyrics.length > 0" style="white-space: pre-line; ">
         {{ lyrics }}
       </p>
