@@ -95,10 +95,7 @@
       async init() {
         const params = new URLSearchParams(window.location.search);
         //this is bullshit, optimize
-        if (
-          params.get('code') &&
-          !window.localStorage.getItem('refreshToken')
-        ) {
+        if (params.get('code')) {
           spotifyApi.authorizationCodeGrant(params.get('code')).then(
             data => {
               // Set the access token on the API object to use it in later calls
@@ -108,9 +105,7 @@
                 'refreshToken',
                 data.body['refresh_token']
               );
-              this.refreshToken = data.body['refresh_token'];
-              this.getCurrentPlayingSong();
-              this.getMe();
+              window.close();
             },
             function(err) {
               console.error('Something went wrong!', err);
@@ -122,20 +117,17 @@
           await this.refreshAccessToken();
           this.getCurrentPlayingSong();
           this.getMe();
+        } else {
+          this.checkForRefreshToken();
         }
       },
       getCurrentPlayingSong() {
         this.refreshAccessToken().then(() => {
-          spotifyApi.getMyCurrentPlayingTrack().then(
-            data => {
-              this.title = data.body.item.name;
-              this.currentSong = data.body;
-              this.getLyrics();
-            },
-            function(err) {
-              console.error(err);
-            }
-          );
+          spotifyApi.getMyCurrentPlayingTrack().then(data => {
+            this.title = data.body.item.name;
+            this.currentSong = data.body;
+            this.getLyrics();
+          });
         });
         setInterval(() => {
           if (!this.refreshToken) return;
@@ -155,6 +147,21 @@
               }
             );
           });
+        }, 1000);
+      },
+      checkForRefreshToken() {
+        if ((this.refreshToken = window.localStorage.getItem('refreshToken')))
+          return;
+
+        setInterval(() => {
+          if (
+            (this.refreshToken = window.localStorage.getItem('refreshToken'))
+          ) {
+            this.init();
+          } else {
+            console.log('checking for refresh token');
+            return;
+          }
         }, 1000);
       },
       getLyrics() {
@@ -194,6 +201,7 @@
         this.title = '';
 
         window.localStorage.clear();
+        this.checkForRefreshToken();
       }
     }
   };

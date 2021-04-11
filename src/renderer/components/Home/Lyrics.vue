@@ -1,7 +1,10 @@
 <template>
   <div class="row justify-content-center content">
     <div class="col-8 text-center py-3">
-      <p v-if="lyrics.length > 0" style="white-space: pre-line; ">
+      <p
+        v-if="lyrics.length > 0 && lyrics !== ''"
+        style="white-space: pre-line; "
+      >
         {{ lyrics }}
       </p>
       <p v-else>

@@ -11,7 +11,10 @@
         </div>
         <div class="col-12 text-center pt-3">{{ me.display_name }}</div>
         <div class="col-12 pt-3">
-          <div @click="$emit('logout', $event)" class="btn btn-primary w-100">
+          <div
+            @click="$emit('logout', $event)"
+            class="btn btn-primary rounded-pill w-100"
+          >
             Log Out
           </div>
         </div>
@@ -25,7 +28,11 @@
           </p>
         </div>
         <div class="col-12 pt-3">
-          <a :href="authUrl" class="btn btn-primary w-100">
+          <a
+            :href="authUrl"
+            target="blank"
+            class="btn rounded-pill btn-primary w-100"
+          >
             Log In
           </a>
         </div>
